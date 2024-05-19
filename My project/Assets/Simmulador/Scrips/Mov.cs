@@ -8,26 +8,49 @@ public class NewBehaviourScript : MonoBehaviour
     public Transform user;
     private NavMeshAgent enemyAgent;
     public bool UserDetect;
-    //private Animator enemyAnimator;
-    // Start is called before the first frame update
+    private bool isStopped = false;
+    private int triggerCount = 0; // Contador de cuántas veces ha sido afectado por el trigger
+
     void Start()
     {
         enemyAgent = GetComponent<NavMeshAgent>();
-        //enemyAnimator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-       
-        if (UserDetect)
+        if (UserDetect && !isStopped)
         {
-
             enemyAgent.destination = user.position;
-
-
         }
-      
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        // Verificar si el objeto que entra en el trigger tiene la etiqueta "BalaPlayer"
+        if (other.CompareTag("BalaPlayer"))
+        {
+            // Incrementar el contador del trigger
+            triggerCount++;
+
+            if (triggerCount == 1)
+            {
+                StartCoroutine(StopAgent());
+            }
+            else if (triggerCount == 2)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    private IEnumerator StopAgent()
+    {
+        isStopped = true;
+        enemyAgent.isStopped = true;
+
+        yield return new WaitForSeconds(2);
+
+        enemyAgent.isStopped = false;
+        isStopped = false;
+    }
 }

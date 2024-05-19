@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class ObjectSpawner : MonoBehaviour
@@ -15,6 +16,14 @@ public class ObjectSpawner : MonoBehaviour
 
     IEnumerator ActivarHijosUnoPorUno()
     {
+        // Verificar si el objeto padre no tiene hijos
+        if (transform.childCount == 0)
+        {
+            // Cargar una escena (aquí puedes cambiar "NombreDeLaEscena" por el nombre de la escena que quieras cargar)
+            SceneManager.LoadScene("Inicio");
+            yield break; // Salir de la corrutina
+        }
+
         // Recorrer cada hijo del objeto padre
         foreach (Transform hijo in transform)
         {
@@ -26,3 +35,5 @@ public class ObjectSpawner : MonoBehaviour
         }
     }
 }
+
+

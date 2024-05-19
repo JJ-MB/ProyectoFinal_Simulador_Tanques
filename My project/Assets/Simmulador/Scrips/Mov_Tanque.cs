@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Mov_Tanque : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class Mov_Tanque : MonoBehaviour
     public GameObject Audios; // Mov
 
     private CharacterController characterController;
+    private int hitCount = 0; // Contador de golpes
 
     void Start()
     {
@@ -61,6 +63,28 @@ public class Mov_Tanque : MonoBehaviour
         if (moveDirection != Vector3.zero)
         {
             characterController.Move(moveDirection * Time.deltaTime);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // Verificar si el objeto que entra en el trigger tiene la etiqueta "BalaEnemigo"
+        if (other.CompareTag("BalaEnemigo"))
+        {
+            // Generar un número aleatorio entre 0 y 10
+            int randomNumber = Random.Range(0, 11);
+
+            // Si el número aleatorio es menor o igual a 3, incrementar hitCount
+            if (randomNumber <= 3)
+            {
+                hitCount++;
+            }
+
+            if (hitCount >= 4)
+            {
+                // Cambiar a la escena destino
+                SceneManager.LoadScene("Inicio");
+            }
         }
     }
 }
